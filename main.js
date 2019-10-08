@@ -42,7 +42,21 @@ app.get('/API/userExists', (req, res) => {
 		if(exists.length > 0){
 			res.status(200).end(true.toString());
 		}
-		res.status(401).end();
+		res.end(false.toString());
+	});
+})
+
+app.get('/API/getMenuItems', (req, res) => {
+	var menu = {categories: '', options: '', fillings: ''};
+	sql.getAll('categories', function (categories) {
+		menu.categories = categories;
+		sql.getAll('options', function(options) {
+			menu.options = options;
+			sql.getAll('fillings', function(fillings) {
+				menu.fillings = fillings;
+				res.json(menu);
+			});
+		});
 	});
 })
 

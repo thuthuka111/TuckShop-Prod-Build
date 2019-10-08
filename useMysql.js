@@ -88,7 +88,7 @@ fillOptionsTable = function () {
 	});
 }
 
-exports.signUp = function (sessionID, userID, email, name) {//need a field for location
+exports.signUp = function (sessionID, userID, email, name) {
 	var sql = `INSERT INTO user (sessionID, userID, email, name) VALUES (?, ?, ?, ?)`;
 	var inserts = [sessionID, userID, email, name];
 	con.query(sql, inserts, (err, results) => {
@@ -97,6 +97,22 @@ exports.signUp = function (sessionID, userID, email, name) {//need a field for l
 		console.log(results);
 	});
 }
+
+exports.getAll = function (tableName, callback) {
+	var sql = `SELECT * FROM ${tableName}`;
+	var inserts = [tableName];
+	con.query(sql, function (err, results) {
+		if (err) throw err;
+		callback(results);
+	});
+}
+
+
+
+
+
+
+
 exports.getUserByID = function (sessionID, callback) {
 	// console.log('sessionID: ' + sessionID);
 	var sql = 'SELECT * FROM user WHERE sessionID = ?';
