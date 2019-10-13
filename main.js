@@ -24,10 +24,7 @@ app.use(session({
 }));
 
 app.get('/', (req, res) => {
-	// res.writeHead(200, { 'content-type': 'application/json' });
-	// initialize with these sql.makeCategoriesTable(); sql.makeOptionsTable(); sql.makeFillingsTable(); sql.makeUserTable();
 	console.log(req.sessionID);
-	
 	sql.sessionExists(req.sessionID, function(err, exists) {
 		res.end(exists.toString());
 	});
@@ -36,7 +33,6 @@ app.get('/API/getSessionID', (req, res) => {
 	testJSON = { sessionID: req.sessionID };
 	res.end(JSON.stringify(testJSON));
 })
-
 app.get('/API/userExists', (req, res) => {
 	sql.sessionExists(req.sessionID, function(exists) {
 		if(exists.length > 0){
@@ -45,7 +41,6 @@ app.get('/API/userExists', (req, res) => {
 		res.end(false.toString());
 	});
 })
-
 app.get('/API/getMenuItems', (req, res) => {
 	var menu = {categories: '', options: '', fillings: ''};
 	sql.getAll('categories', function (categories) {
@@ -60,6 +55,11 @@ app.get('/API/getMenuItems', (req, res) => {
 	});
 })
 
+app.post('/API/placeOrder', (req, res) => {
+	console.log(JSON.stringify(req.body));
+	order = JSON.stringify(req.body);
+	sql.placeOrder(order);
+})
 app.post('/API/tokenSignIn', (req, res) => {
 	// console.log(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')));
 	// console.log(req.sessionID);

@@ -1,7 +1,8 @@
 const sql = require('./useMysql');
 
-sql.makeCategoriesTable();
+/*sql.makeCategoriesTable();
 sql.makeOptionsTable();
 sql.makeFillingsTable();
 sql.makeUserTable();
-sql.makeUserSessionsTable();
+sql.makeUserSessionsTable();*/
+sql.makeOrdersTable();

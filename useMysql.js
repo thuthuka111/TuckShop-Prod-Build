@@ -32,10 +32,17 @@ exports.makeUserSessionsTable = function () {
 	})
 }
 exports.makeUserTable = function () {// remved grade VARCHAR(16), school VARCHAR(32),, username VARCHAR(32)location VARCHAR(32),
-	var sql = `CREATE TABLE user (id INT AUTO_INCREMENT PRIMARY KEY, sessionID VARCHAR(128), userID VARCHAR(32), email VARCHAR(32), name VARCHAR(32))`;
+	var sql = 'CREATE TABLE user (id INT AUTO_INCREMENT PRIMARY KEY, sessionID VARCHAR(128), userID VARCHAR(32), email VARCHAR(32), name VARCHAR(32))';
 	con.query(sql, (err, result) => {
 		if (err) throw err;
 		console.log("Database name created");
+	});
+}
+exports.makeOrdersTable = function() {// order# becouse 'order' is a reserved word
+	sql = 'CREATE TABLE IF NOT EXISTS orders (item TEXT)';
+	con.query(sql, (err, result) => {
+		if (err) throw err;
+		console.log("ORDERS Database created");
 	});
 }
 
@@ -104,6 +111,15 @@ exports.getAll = function (tableName, callback) {
 	con.query(sql, function (err, results) {
 		if (err) throw err;
 		callback(results);
+	});
+}
+
+exports.placeOrder = function(orderInfo) {
+	sql = 'INSERT INTO orders (item) VALUES (?)';
+	inserts = [orderInfo];
+	con.query(sql, inserts, (err, results) => {
+		if (err) throw err;
+		console.log("order added created");
 	});
 }
 
