@@ -5,4 +5,4 @@ sql.makeOptionsTable();
 sql.makeFillingsTable();
 sql.makeUserTable();
 sql.makeUserSessionsTable();*/
-sql.makeOrdersTable();
+sql.makeAllTables();

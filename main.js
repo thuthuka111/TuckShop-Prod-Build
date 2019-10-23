@@ -25,9 +25,10 @@ app.use(session({
 
 app.get('/', (req, res) => {
 	console.log(req.sessionID);
-	sql.sessionExists(req.sessionID, function(err, exists) {
+	/*sql.sessionExists(req.sessionID, function(err, exists) {
 		res.end(exists.toString());
-	});
+	});*/
+	sql.makeAllTables();
 })
 app.get('/API/getSessionID', (req, res) => {
 	testJSON = { sessionID: req.sessionID };
@@ -43,11 +44,11 @@ app.get('/API/userExists', (req, res) => {
 })
 app.get('/API/getMenuItems', (req, res) => {
 	var menu = {categories: '', options: '', fillings: ''};
-	sql.getAll('categories', function (categories) {
+	sql.getCategories(function (categories) {
 		menu.categories = categories;
-		sql.getAll('options', function(options) {
+		sql.getOptions(function(options) {
 			menu.options = options;
-			sql.getAll('fillings', function(fillings) {
+			sql.getFillings(function(fillings) {
 				menu.fillings = fillings;
 				res.json(menu);
 			});
@@ -56,9 +57,14 @@ app.get('/API/getMenuItems', (req, res) => {
 })
 
 app.post('/API/placeOrder', (req, res) => {
-	console.log(JSON.stringify(req.body));
-	order = JSON.stringify(req.body);
-	sql.placeOrder(order);
+	order = req.body;
+	console.log(order);
+	console.log(req.sessionID);
+	sql.getUserByID(req.sessionID, function(user) {
+		console.log(user); 
+		sql.placeOrder(order, user.userID);//  change this to user.userID after you get sessions to work as intended
+	});
+	
 })
 app.post('/API/tokenSignIn', (req, res) => {
 	// console.log(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')));
