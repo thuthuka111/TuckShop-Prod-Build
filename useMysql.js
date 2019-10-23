@@ -42,7 +42,7 @@ exports.makeAllTables = function () {
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
-	sql = 'CREATE table categoryOptionLink(categoryID INT, optionID INT)';
+	sql = 'CREATE table categoryOptionlink(categoryID INT, optionID INT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
@@ -87,7 +87,7 @@ exports.makeAllTables = function () {
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
-	sql = `INSERT INTO categoryoptionlink (categoryID, optionID) VALUES (1, 2000), (1, 2001), (1, 2022), (2, 2007), (2, 2005), (2, 2012), (2, 2004), (3, 2000), (3, 2001), (4, 2002), (4, 2003), (5, 2012), (5, 2013), (5, 2015), (5, 2014), (5, 2017), (5, 2018), (5, 2019), (5, 2020), (5, 2021), (6, 2007), (6, 2008), (6, 2010), (6, 2009), (6, 2011)`;
+	sql = `INSERT INTO categoryOptionlink (categoryID, optionID) VALUES (1, 2000), (1, 2001), (1, 2022), (2, 2007), (2, 2005), (2, 2012), (2, 2004), (3, 2000), (3, 2001), (4, 2002), (4, 2003), (5, 2012), (5, 2013), (5, 2015), (5, 2014), (5, 2017), (5, 2018), (5, 2019), (5, 2020), (5, 2021), (6, 2007), (6, 2008), (6, 2010), (6, 2009), (6, 2011)`;
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
@@ -204,7 +204,7 @@ exports.getCategories = function (callback) {
 	});
 }
 exports.getOptions = function (callback) {
-	sql = 'SELECT category, optionName AS \'option\' FROM categories, options, categoryoptionlink WHERE categories.categoryID = categoryoptionlink.categoryID AND categoryoptionLink.optionID = options.optionID';
+	sql = 'SELECT category, optionName AS \'option\' FROM categories, options, categoryOptionlink WHERE categories.categoryID = categoryOptionlink.categoryID AND categoryOptionlink.optionID = options.optionID';
 	con.query(sql, (err, result) => {
 		if (err) throw err;
 		callback(result);
