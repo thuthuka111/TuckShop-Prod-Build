@@ -91,7 +91,7 @@ exports.makeAllTables = function () {
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
-	sql = `INSERT INTO categoryfillinglink (categoryID, fillingID) VALUES (3, 1000), (3, 1002), (3, 1003), (3, 1004), (3, 1005), (3, 1006), (3, 1007), (3, 1008), (3, 1008), (3, 1009), (3, 1010), (3, 1011), (3, 1012), (3, 1013), (3, 1014), (4, 1000), (4, 1002), (4, 1003), (4, 1004), (4, 1005), (4, 1006), (4, 1007), (4, 1008), (4, 1008), (4, 1009), (4, 1010), (4, 1011), (4, 1012), (4, 1013), (4, 1014)`;
+	sql = `INSERT INTO categoryFillingLink (categoryID, fillingID) VALUES (3, 1000), (3, 1002), (3, 1003), (3, 1004), (3, 1005), (3, 1006), (3, 1007), (3, 1008), (3, 1008), (3, 1009), (3, 1010), (3, 1011), (3, 1012), (3, 1013), (3, 1014), (4, 1000), (4, 1002), (4, 1003), (4, 1004), (4, 1005), (4, 1006), (4, 1007), (4, 1008), (4, 1008), (4, 1009), (4, 1010), (4, 1011), (4, 1012), (4, 1013), (4, 1014)`;
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
@@ -211,7 +211,7 @@ exports.getOptions = function (callback) {
 	});
 }
 exports.getFillings = function (callback) {
-	sql = 'SELECT category, filling FROM categories, fillings, categoryfillinglink WHERE categories.categoryID = categoryfillinglink.categoryID AND categoryfillingLink.fillingID = fillings.fillingID ORDER BY category';
+	sql = 'SELECT category, filling FROM categories, fillings, categoryFillingLink WHERE categories.categoryID = categoryFillingLink.categoryID AND categoryFillingLink.fillingID = fillings.fillingID ORDER BY category';
 	con.query(sql, (err, result) => {
 		if (err) throw err;
 		callback(result);
