@@ -17,38 +17,62 @@ exports.makeAllTables = function () {
 	sql = 'CREATE table categories (category TEXT, categoryID INT PRIMARY KEY AUTO_INCREMENT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
-	});
-	sql = 'ALTER TABLE categories AUTO_INCREMENT = 0';
-	con.query(sql, (err) => {
-		if (err) throw err;
+		sql = 'ALTER TABLE categories AUTO_INCREMENT = 0';
+		con.query(sql, (err) => {
+			if (err) throw err;
+			sql = `INSERT INTO categories (category) VALUES ('Burger'), ('Roll'), ('Wrap'), ('Tramezzini'), ('Sandwich'), ('Salad')`;
+			con.query(sql, (err) => {
+				if (err) throw err;
+			});
+		});
 	});
 	sql = 'CREATE table categoryFillingLink (categoryID INT, fillingID INT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
+		sql = `INSERT INTO categoryFillingLink (categoryID, fillingID) VALUES (3, 1000), (3, 1002), (3, 1003), (3, 1004), (3, 1005), (3, 1006), (3, 1007), (3, 1008), (3, 1008), (3, 1009), (3, 1010), (3, 1011), (3, 1012), (3, 1013), (3, 1014), (4, 1000), (4, 1002), (4, 1003), (4, 1004), (4, 1005), (4, 1006), (4, 1007), (4, 1008), (4, 1008), (4, 1009), (4, 1010), (4, 1011), (4, 1012), (4, 1013), (4, 1014)`;
+		con.query(sql, (err) => {
+			if (err) throw err;
+		});
 	});
 	sql = 'CREATE TABLE fillings(fillingID INT PRIMARY KEY AUTO_INCREMENT, filling TEXT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
-	});
-	sql = 'ALTER TABLE fillings AUTO_INCREMENT = 1000';
-	con.query(sql, (err) => {
-		if (err) throw err;
+		sql = 'ALTER TABLE fillings AUTO_INCREMENT = 1000';
+		con.query(sql, (err) => {
+			if (err) throw err;
+			sql = `INSERT INTO fillings(filling) VALUES ('Bacon'), ('Chicken Mayo'), ('Grilled Chicken'), ('Mince'), ('Ham'), ('Mushroom'), ('Feta'), ('Egg'), ('Tomato'), ('Avocado'), ('Mozzarella'), ('Blue Cheese'), ('Tuna Mayo'), ('Onion'), ('Cheese'), ('None')`;
+			con.query(sql, (err) => {
+				if (err) throw err;
+			});
+		});
 	});
 	sql = 'CREATE TABLE options(optionID INT PRIMARY KEY AUTO_INCREMENT, optionName TEXT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
-	});
-	sql = 'ALTER TABLE options AUTO_INCREMENT = 2000';
-	con.query(sql, (err) => {
-		if (err) throw err;
+		sql = 'ALTER TABLE options AUTO_INCREMENT = 2000';
+		con.query(sql, (err) => {
+			if (err) throw err;
+			sql = `INSERT into options(optionName) VALUES ('Beef'), ('Chicken'), ('Large'), ('Mini'), ('Frank'), ('Bacon'), ('Bacon & cheese'), ('Bacon and Blue Cheese'), ('Chicken Mayo'), ('Greek'), ('Tuna'), ('Grilled Chicken'), ('Cheese'), ('Cheese & Tomato'), ('Ham & Cheese'), ('Ham, Cheese & Tomato'), ('Ham & Tomato'), ('Chicken Mayo'), ('Bacon & Egg'), ('Bacon, Egg & Cheese'), ('Mince'), ('Mince & Cheese')`;
+			con.query(sql, (err) => {
+				if (err) throw err;
+			});
+		});
 	});
 	sql = 'CREATE table categoryOptionLink(categoryID INT, optionID INT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
+		sql = `INSERT INTO categoryOptionLink (categoryID, optionID) VALUES (1, 2000), (1, 2001), (1, 2022), (2, 2007), (2, 2005), (2, 2012), (2, 2004), (3, 2000), (3, 2001), (4, 2002), (4, 2003), (5, 2012), (5, 2013), (5, 2015), (5, 2014), (5, 2017), (5, 2018), (5, 2019), (5, 2020), (5, 2021), (6, 2007), (6, 2008), (6, 2010), (6, 2009), (6, 2011)`;
+		con.query(sql, (err) => {
+			if (err) throw err;
+		});
 	});
 	sql = 'CREATE table availability(itemID INT, availability INT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
+		sql = `INSERT INTO availability (availability, itemID) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 2000), (1, 2001), (1, 2002), (1, 2003), (1, 2004), (1, 2005), (1, 2006), (1, 2007), (1, 2008), (1, 2009), (1, 2010), (1, 2011), (1, 2012), (1, 2013), (1, 2014), (1, 2015), (1, 2016), (1, 2017), (1, 2018), (1, 2019), (1, 2020), (1, 2021), (1, 2022), (1, 1000), (1, 1001), (1, 1002), (1, 1003), (1, 1004), (1, 1005), (1, 1006), (1, 1007), (1, 1008), (1, 1009), (1, 1010), (1, 1011), (1, 1012) ,(1, 1013), (1, 1014)`;
+		con.query(sql, (err) => {
+			if (err) throw err;
+		});
 	});
 	sql = 'CREATE TABLE orders(userID TEXT, orderID INT PRIMARY KEY AUTO_INCREMENT)';
 	con.query(sql, (err) => {
@@ -65,37 +89,12 @@ exports.makeAllTables = function () {
 	sql = 'CREATE table orderStatesLink(orderID INT, stateID INT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
+		sql = `INSERT INTO orderstates (state) VALUES ('Waiting'), ('Ready to Collect'), ('Completed')`;
+		con.query(sql, (err) => {
+			if (err) throw err;
+		});
 	});
 	sql = 'CREATE table orderStates(state TEXT, stateID INT PRIMARY KEY AUTO_INCREMENT)';
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-
-	sql = `INSERT INTO orderstates (state) VALUES ('Waiting'), ('Ready to Collect')`;
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-	sql = `INSERT INTO categories (category) VALUES ('Burger'), ('Roll'), ('Wrap'), ('Tramezzini'), ('Sandwich'), ('Salad')`;
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-	sql = `INSERT into options(optionName) VALUES ('Beef'), ('Chicken'), ('Large'), ('Mini'), ('Frank'), ('Bacon'), ('Bacon & cheese'), ('Bacon and Blue Cheese'), ('Chicken Mayo'), ('Greek'), ('Tuna'), ('Grilled Chicken'), ('Cheese'), ('Cheese & Tomato'), ('Ham & Cheese'), ('Ham, Cheese & Tomato'), ('Ham & Tomato'), ('Chicken Mayo'), ('Bacon & Egg'), ('Bacon, Egg & Cheese'), ('Mince'), ('Mince & Cheese')`;
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-	sql = `INSERT INTO fillings(filling) VALUES ('Bacon'), ('Chicken Mayo'), ('Grilled Chicken'), ('Mince'), ('Ham'), ('Mushroom'), ('Feta'), ('Egg'), ('Tomato'), ('Avocado'), ('Mozzarella'), ('Blue Cheese'), ('Tuna Mayo'), ('Onion'), ('Cheese'), ('None')`;
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-	sql = `INSERT INTO categoryOptionLink (categoryID, optionID) VALUES (1, 2000), (1, 2001), (1, 2022), (2, 2007), (2, 2005), (2, 2012), (2, 2004), (3, 2000), (3, 2001), (4, 2002), (4, 2003), (5, 2012), (5, 2013), (5, 2015), (5, 2014), (5, 2017), (5, 2018), (5, 2019), (5, 2020), (5, 2021), (6, 2007), (6, 2008), (6, 2010), (6, 2009), (6, 2011)`;
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-	sql = `INSERT INTO categoryFillingLink (categoryID, fillingID) VALUES (3, 1000), (3, 1002), (3, 1003), (3, 1004), (3, 1005), (3, 1006), (3, 1007), (3, 1008), (3, 1008), (3, 1009), (3, 1010), (3, 1011), (3, 1012), (3, 1013), (3, 1014), (4, 1000), (4, 1002), (4, 1003), (4, 1004), (4, 1005), (4, 1006), (4, 1007), (4, 1008), (4, 1008), (4, 1009), (4, 1010), (4, 1011), (4, 1012), (4, 1013), (4, 1014)`;
-	con.query(sql, (err) => {
-		if (err) throw err;
-	});
-	sql = `INSERT INTO availability (availability, itemID) VALUES (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 2000), (1, 2001), (1, 2002), (1, 2003), (1, 2004), (1, 2005), (1, 2006), (1, 2007), (1, 2008), (1, 2009), (1, 2010), (1, 2011), (1, 2012), (1, 2013), (1, 2014), (1, 2015), (1, 2016), (1, 2017), (1, 2018), (1, 2019), (1, 2020), (1, 2021), (1, 2022), (1, 1000), (1, 1001), (1, 1002), (1, 1003), (1, 1004), (1, 1005), (1, 1006), (1, 1007), (1, 1008), (1, 1009), (1, 1010), (1, 1011), (1, 1012) ,(1, 1013), (1, 1014)`;
 	con.query(sql, (err) => {
 		if (err) throw err;
 	});
@@ -126,62 +125,6 @@ exports.makeUserTable = function () {// remved grade VARCHAR(16), school VARCHAR
 	con.query(sql, (err, result) => {
 		if (err) throw err;
 		console.log("Database name CREATEd");
-	});
-}
-exports.makeOrdersTable = function () {// order# becouse 'order' is a reserved word
-	sql = 'CREATE TABLE IF NOT EXISTS orders (item TEXT)';
-	con.query(sql, (err, result) => {
-		if (err) throw err;
-		console.log("ORDERS Database CREATEd");
-	});
-}
-
-exports.makeCategoriesTable = function () {
-	sql = 'CREATE TABLE IF NOT EXISTS categories (category TEXT)';
-	con.query(sql, (err, results) => {
-		if (err) throw err;
-		console.log('categories table CREATEd');
-		fillCategoriesTable();
-	});
-}
-fillCategoriesTable = function () {
-	var sql = 'INSERT INTO categories (category) VALUES (?), (?), (?), (?), (?), (?)';
-	var inserts = ['Burger', 'Roll', 'Wrap', 'Tramezzini', 'Sandwich', 'Salads'];
-	con.query(sql, inserts, (err, results) => {
-		if (err) throw err;
-		console.log('categories added to menu');
-	});
-}
-exports.makeFillingsTable = function () {
-	sql = 'CREATE TABLE IF NOT EXISTS fillings (category TEXT, filling TEXT)';
-	con.query(sql, (err, result) => {
-		if (err) throw err;
-		console.log('Fillings table CREATEd');
-		fillFillingsTable();
-	});
-}
-fillFillingsTable = function () {// FILLINGS IS GONNA BE A JSON
-	var sql = 'INSERT INTO fillings (category, filling) VALUES (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?)';
-	var inserts = ['Burger', '{}', 'Roll', '{}', 'Wrap', '{}', 'Tramezzini', '{}', 'Sandwich', '{}', 'Salads', '{}'];
-	con.query(sql, inserts, (err, results) => {
-		if (err) throw err;
-		console.log('fillings added to table');
-	});
-}
-exports.makeOptionsTable = function () {
-	sql = 'CREATE TABLE IF NOT EXISTS options (category TEXT, options TEXT)';
-	con.query(sql, (err, result) => {
-		if (err) throw err;
-		console.log('Menu Table CREATEd');
-		fillOptionsTable();
-	});
-}
-fillOptionsTable = function () {
-	var sql = 'INSERT INTO options (category, options) VALUES (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?)';
-	var inserts = ['Burger', 'beef', 'Burger', 'chicken', 'Roll', 'Frank', 'Roll', 'Bacon', 'Roll', 'Bacon & Cheese', 'Wrap', 'Beef', 'Wrap', 'Chicken', 'Tramezzini', 'Cheese', 'Sandwich', 'Choose filling', 'Salad', 'Bacon and Blue Cheese', 'Salad', 'Chicken Mayo', 'Salad', 'Greek', 'Salad', 'Tuna', 'Salad', 'Grilled Chicken'];
-	con.query(sql, inserts, (err, results) => {
-		if (err) throw err;
-		console.log('options added to menu');
 	});
 }
 
@@ -234,6 +177,11 @@ exports.placeOrder = function (orderInfo, userID) {
 		sql = 'SELECT orderID FROM orders WHERE userID = ? ORDER BY orderID DESC LIMIT 1';
 		con.query(sql, inserts, (err, orderID) => {
 			if (err) throw err;
+			sql = 'INSERT INTO orderstateslink (orderID, stateID) VALUES (?, 1)';
+			inserts = [orderID[0].orderID];
+			con.query(sql, inserts, (err) => {
+				if (err) throw err;
+			});
 			sql = 'SELECT categoryID, optionID FROM categories, options WHERE category = ? AND optionName = ?';
 			for (const order of orderInfo) {
 				inserts = [order.category, order.option]
@@ -271,6 +219,14 @@ exports.placeOrder = function (orderInfo, userID) {
 		});
 	});
 }
+exports.getOrders = function (callback) {
+	var sql = 'select orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, orderslink, orderlinkfillinglink, orderstates, orderstateslink WHERE orders.userID = user.userID AND orders.orderID = orderslink.orderID AND orderslink.categoryID = categories.categoryID AND orderslink.optionID = options.optionID AND orderslink.orderFillingID = orderlinkfillinglink.orderFillingID AND orderlinkfillinglink.fillingID = fillings.fillingID AND orders.orderID = orderstateslink.orderID AND orderstateslink.stateID = orderstates.stateID ORDER BY orders.orderID';
+	con.query(sql,function (err, result) {
+		if (err) throw err;
+		callback(result);
+	});
+}
+
 
 exports.getUserByID = function (sessionID, callback) {
 	// console.log('sessionID: ' + sessionID);
