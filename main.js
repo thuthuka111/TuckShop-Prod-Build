@@ -58,15 +58,16 @@ app.get('/API/getMenuItems', (req, res) => {
 app.get('/API/getOrders', (req, res) => {
 	sql.getOrders(function (orders) {
 		orders.push({
-			category: 'ffffffffffff',
-			filling: 'fffffffffffff',
-			name: 'fffffffffffffff',
-			optionName: 'fffffffffffffff',
+			category: 'FFFF',
+			filling: 'FFFF',
+			name: 'FFFF',
+			optionName: 'FFFF',
 			orderID: -1,
-			state: 'fffffffffffffff'
+			state: 'FFFF'
 		});
 
 		let orderTemp = {
+			orderID: -1,
 			category: '',
 			filling: [],
 			name: '',
@@ -77,8 +78,11 @@ app.get('/API/getOrders', (req, res) => {
 		let same = false;
 
 		for (let i = 0; i < orders.length - 1; i++) {
+			orderTemp.orderID = orders[i].orderID;
 			orderTemp.category = orders[i].category;
-			orderTemp.filling.push(orders[i].filling);
+			if (orders[i].filling != 'None') {
+				orderTemp.filling.push(orders[i].filling);
+			}
 			orderTemp.name = orders[i].name;
 			orderTemp.option = orders[i].optionName;
 			orderTemp.state = orders[i].state;
@@ -145,7 +149,18 @@ app.post('/API/tokenSignIn', (req, res) => {
 	google.verifyID(req.body.idToken, function (userInfo) {
 		// console.dir(userInfo);// add a statement to check if the userInfo.email_verified == true
 		sql.signUp(req.sessionID, userInfo.userID, userInfo.email, userInfo.name);
+		res.end(true.toString());
 	});
+})
+app.post('/API/setOrderState', (req, res) => {
+	console.log(req.body);
+	if (req.body.state === 'Waiting') {
+		//send order confirmation email
+	}
+	else {
+		sql.setOrderState(req.body.orderID, req.body.state);
+	}
+	
 })
 
 app.listen(2021, () => {

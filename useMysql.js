@@ -89,7 +89,7 @@ exports.makeAllTables = function () {
 	sql = 'CREATE table orderStatesLink(orderID INT, stateID INT)';
 	con.query(sql, (err) => {
 		if (err) throw err;
-		sql = `INSERT INTO orderstates (state) VALUES ('Waiting'), ('Ready to Collect'), ('Completed')`;
+		sql = `INSERT INTO orderStates (state) VALUES ('Waiting'), ('Ready to Collect'), ('Completed'), ('Accepted)`;
 		con.query(sql, (err) => {
 			if (err) throw err;
 		});
@@ -177,7 +177,7 @@ exports.placeOrder = function (orderInfo, userID) {
 		sql = 'SELECT orderID FROM orders WHERE userID = ? ORDER BY orderID DESC LIMIT 1';
 		con.query(sql, inserts, (err, orderID) => {
 			if (err) throw err;
-			sql = 'INSERT INTO orderstateslink (orderID, stateID) VALUES (?, 1)';
+			sql = 'INSERT INTO orderStatesLink (orderID, stateID) VALUES (?, 1)';
 			inserts = [orderID[0].orderID];
 			con.query(sql, inserts, (err) => {
 				if (err) throw err;
@@ -220,10 +220,23 @@ exports.placeOrder = function (orderInfo, userID) {
 	});
 }
 exports.getOrders = function (callback) {
-	var sql = 'select orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, orderslink, orderlinkfillinglink, orderstates, orderstateslink WHERE orders.userID = user.userID AND orders.orderID = orderslink.orderID AND orderslink.categoryID = categories.categoryID AND orderslink.optionID = options.optionID AND orderslink.orderFillingID = orderlinkfillinglink.orderFillingID AND orderlinkfillinglink.fillingID = fillings.fillingID AND orders.orderID = orderstateslink.orderID AND orderstateslink.stateID = orderstates.stateID ORDER BY orders.orderID';
-	con.query(sql,function (err, result) {
+	var sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderlinkfillinglink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderlinkfillinglink.orderFillingID AND orderlinkfillinglink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID ORDER BY orders.orderID';
+	con.query(sql, function (err, result) {
 		if (err) throw err;
 		callback(result);
+	});
+}
+exports.setOrderState = function (orderID, state) {
+	sql = 'select orderStates.stateID, state from orderStates, orderStatesLink where orderID = ? and state = ?';
+	inserts = [orderID, state];
+	con.query(sql, inserts, function (err, result) {
+		if (err) throw err;
+		console.log(result);
+		sql = 'UPDATE orderStatesLink SET stateID = ? WHERE orderID = ?';
+		inserts = [result[0].stateID, orderID];
+		con.query(sql, inserts, function (err) {
+			if (err) throw err;
+		});
 	});
 }
 
