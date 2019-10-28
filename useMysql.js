@@ -187,7 +187,7 @@ exports.placeOrder = function (orderInfo, userID) {
 				inserts = [order.category, order.option]
 				con.query(sql, inserts, (err, categAndOptIDs) => {
 					if (err) throw err;
-					sql = 'INSERT INTO orderslink (orderID, categoryID, optionID) VALUES (?, ?, ?)';
+					sql = 'INSERT INTO ordersLink (orderID, categoryID, optionID) VALUES (?, ?, ?)';
 					inserts = [orderID[0].orderID, categAndOptIDs[0].categoryID, categAndOptIDs[0].optionID];
 					con.query(sql, inserts, (err) => {
 						if (err) throw err;
