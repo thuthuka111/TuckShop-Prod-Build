@@ -205,7 +205,7 @@ exports.placeOrder = function (orderInfo, userID) {
 								}
 								con.query(sql, inserts, (err, fillingIDs) => {
 									if (err) throw err;
-									sql = 'INSERT INTO orderlinkfillinglink (orderfillingID, fillingID) VALUES (?, ?)';
+									sql = 'INSERT INTO orderLinkfillingLink (orderfillingID, fillingID) VALUES (?, ?)';
 									inserts = [orderFillingID[0].orderFillingID, fillingIDs[0].fillingID];
 									con.query(sql, inserts, (err) => {
 										if (err) throw err;
@@ -220,7 +220,7 @@ exports.placeOrder = function (orderInfo, userID) {
 	});
 }
 exports.getOrders = function (callback) {
-	var sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderlinkfillinglink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderlinkfillinglink.orderFillingID AND orderlinkfillinglink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID ORDER BY orders.orderID';
+	var sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderLinkfillingLink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderLinkfillingLink.orderFillingID AND orderLinkfillingLink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID ORDER BY orders.orderID';
 	con.query(sql, function (err, result) {
 		if (err) throw err;
 		callback(result);
