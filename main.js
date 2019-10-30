@@ -6,8 +6,15 @@ const sql = require('./useMysql');
 const google = require('./google-auth-library');
 const path = require('path');
 const bodyParser = require('body-parser');
-const schedule = require('node-schedule');
+const nodemailer = require('nodemailer');
 
+const transporter = nodemailer.createTransport({
+	service: 'gmail',//service rovider (eg'yahoo)
+	auth: {
+		user: 'thuthuka.khumalo@student.stbenedicts.co.za',
+		pass: '#2poopoo'
+	}
+});
 const app = express();
 
 app.use(bodyParser.json());
@@ -35,8 +42,9 @@ app.get('/API/getSessionID', (req, res) => {
 	res.end(JSON.stringify(testJSON));
 })
 app.get('/API/userExists', (req, res) => {
+
 	// sql.sessionExists(req.sessionID, function (exists) {
-		sql.sessionExists(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')), function (exists) {
+	sql.sessionExists(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')), function (exists) {
 		if (exists.length > 0) {
 			res.status(200).end(true.toString());
 		}
@@ -140,13 +148,12 @@ app.post('/API/placeOrder', (req, res) => {
 	order = req.body;
 	console.log(order);
 	sql.getUserByID(req.sessionID, function (user) {
-		sql.placeOrder(order, user[0].userID);//  change this to user.userID after you get sessions to work as intended
+		sql.placeOrder(order, user[0].userID);
 	});
 
 })
 app.post('/API/tokenSignIn', (req, res) => {
 	// console.log(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')));
-	// console.log(req.sessionID);
 	google.verifyID(req.body.idToken, function (userInfo) {
 		// console.dir(userInfo);// add a statement to check if the userInfo.email_verified == true
 		sql.signUp(req.sessionID, userInfo.userID, userInfo.email, userInfo.name);
@@ -154,14 +161,31 @@ app.post('/API/tokenSignIn', (req, res) => {
 	});
 })
 app.post('/API/setOrderState', (req, res) => {
-	console.log(req.body);
+	sql.getUserByOrderID(req.body.orderID, function (user) {
+		console.log(user);
+		var mailOptions = {
+			from: 'thuthuka.khumalo@student.stbenedicts.co.za',
+			to: user[0].email,
+			subject: 'Confirmation Email',
+			html: '<h1>Hi ' + user[0].name + '</h1><p>Your order has been comfimed</p>',
+			text: 'That where does this go'
+		};
+		transporter.sendMail(mailOptions, function (error, info) {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log('Email sent: ' + info.response);
+			}
+		});
+	});
+
 	if (req.body.state === 'Waiting') {
 		//send order confirmation email
 	}
 	else {
 		sql.setOrderState(req.body.orderID, req.body.state);
 	}
-	
+
 })
 
 app.listen(2021, () => {

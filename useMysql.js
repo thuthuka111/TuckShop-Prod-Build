@@ -121,7 +121,7 @@ exports.makeUserSessionsTable = function () {
 	})
 }
 exports.makeUserTable = function () {// remved grade VARCHAR(16), school VARCHAR(32),, username VARCHAR(32)location VARCHAR(32),
-	var sql = 'CREATE TABLE user (id INT AUTO_INCREMENT PRIMARY KEY, sessionID VARCHAR(128), userID VARCHAR(32), email VARCHAR(32), name VARCHAR(32))';
+	var sql = 'CREATE TABLE user (id INT AUTO_INCREMENT PRIMARY KEY, sessionID VARCHAR(128), userID VARCHAR(32), email TEXT), name VARCHAR(32))';
 	con.query(sql, (err, result) => {
 		if (err) throw err;
 		console.log("Database name CREATEd");
@@ -239,8 +239,14 @@ exports.setOrderState = function (orderID, state) {
 		});
 	});
 }
-
-
+exports.getUserByOrderID = function(orderID, callback) {
+	sql = 'SELECT DISTINCT email, name FROM orders, user WHERE orders.orderID = ? AND orders.userID = user.userID';
+	inserts = [orderID];
+	con.query(sql, inserts, function (err, result) {
+		if (err) throw err;
+		callback(result);
+	});
+}
 exports.getUserByID = function (sessionID, callback) {
 	// console.log('sessionID: ' + sessionID);
 	var sql = 'SELECT * FROM user WHERE sessionID = ? OR userID = ?';
