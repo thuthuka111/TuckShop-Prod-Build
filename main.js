@@ -35,7 +35,8 @@ app.get('/API/getSessionID', (req, res) => {
 	res.end(JSON.stringify(testJSON));
 })
 app.get('/API/userExists', (req, res) => {
-	sql.sessionExists(req.sessionID, function (exists) {
+	// sql.sessionExists(req.sessionID, function (exists) {
+		sql.sessionExists(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')), function (exists) {
 		if (exists.length > 0) {
 			res.status(200).end(true.toString());
 		}
