@@ -220,7 +220,7 @@ exports.placeOrder = function (orderInfo, userID) {
 	});
 }
 exports.getOrders = function (callback) {
-	var sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderLinkfillingLink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderLinkfillingLink.orderFillingID AND orderLinkfillingLink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID ORDER BY orders.orderID';
+	var sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderLinkfillingLink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderLinkfillingLink.orderFillingID AND orderLinkfillingLink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID AND state != \'Completed\' ORDER BY orders.orderID';
 	con.query(sql, function (err, result) {
 		if (err) throw err;
 		callback(result);
@@ -254,6 +254,14 @@ exports.getUserByID = function (sessionID, callback) {
 	con.query(sql, inserts, function (err, result) {
 		if (err) throw err;
 		callback(result);
+	});
+}
+exports.getUserPendingOrders = function(name, callback) {
+	sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderLinkfillingLink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND user.name = ? AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderLinkfillingLink.orderFillingID AND orderLinkfillingLink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID AND state != \'Completed\' ORDER BY orders.orderID'
+	inserts = [name];
+	con.query(sql, inserts, function (err, orders) {
+		if (err) throw err;
+		callback(orders);
 	});
 }
 

@@ -27,7 +27,7 @@ app.use(session({
 	secret: 'wussgood fam',
 	resave: false,
 	saveUninitialized: true,
-	cookie: { maxAge: 5256000 }// 60 days
+	cookie: { maxAge: 5256000000 }// 60 days
 }));
 
 app.get('/', (req, res) => {
@@ -66,81 +66,27 @@ app.get('/API/getMenuItems', (req, res) => {
 })
 app.get('/API/getOrders', (req, res) => {
 	sql.getOrders(function (orders) {
-		orders.push({
-			category: 'FFFF',
-			filling: 'FFFF',
-			name: 'FFFF',
-			optionName: 'FFFF',
-			orderID: -1,
-			state: 'FFFF'
-		});
-
-		let orderTemp = {
-			orderID: -1,
-			category: '',
-			filling: [],
-			name: '',
-			option: '',
-			state: ''
-		};
-		let ordersTemp = [];
-		let same = false;
-
-		for (let i = 0; i < orders.length - 1; i++) {
-			orderTemp.orderID = orders[i].orderID;
-			orderTemp.category = orders[i].category;
-			if (orders[i].filling != 'None') {
-				orderTemp.filling.push(orders[i].filling);
-			}
-			orderTemp.name = orders[i].name;
-			orderTemp.option = orders[i].optionName;
-			orderTemp.state = orders[i].state;
-
-			if (same && !(orders[i].orderID === orders[i + 1].orderID)) {// true and nextid is not equal
-				// add filling, push, same = false
-				ordersTemp.push(orderTemp);
-				orderTemp = {
-					category: '',
-					filling: [],
-					name: '',
-					option: '',
-					state: ''
-				};
-				same = false;
-			}
-			else if (same && orders[i].orderID === orders[i + 1].orderID) {// same and next id is equal
-				// add filling
-			}
-			else if (!same && !(orders[i].orderID === orders[i + 1].orderID)) {// false and next id is not equal
-				// push, clear template
-				ordersTemp.push(orderTemp);
-				orderTemp = {
-					category: '',
-					filling: [],
-					name: '',
-					option: '',
-					state: ''
-				};
-			}
-			else {// nextID is equal and same = false
-				if (orders[i].category === orders[i + 1].category) {
-					// set same = true, dont push
-					same = true;
+		res.json(formatOrders(orders));
+	});
+})
+app.get('/API/pendingUserOrders', (req, res) => {
+	sql.sessionExists(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')), function (exists) {
+		if (exists.length > 0) {// he ahs been here before
+			sql.getUserByID(exists[0].sessionID, function (user) {
+				if (user.length > 0) {// has signed in
+					sql.getUserPendingOrders(user[0].name, function (pendingOrders) {
+						res.json(formatOrders(pendingOrders));
+					});
 				}
-				else {// categories are different
-					// push, clear template
-					ordersTemp.push(orderTemp);
-					orderTemp = {
-						category: '',
-						filling: [],
-						name: '',
-						option: '',
-						state: ''
-					};
+				else {// not signed in
+					res.end(false.toString());
 				}
-			}
+			});
 		}
-		res.json(ordersTemp);
+		else {// user doesnt exist
+			res.end(false.toString());
+		}
+
 	});
 })
 
@@ -149,9 +95,11 @@ app.post('/API/placeOrder', (req, res) => {
 	console.log(order);
 	sql.getUserByID(req.sessionID, function (user) {
 		sql.placeOrder(order, user[0].userID);
+		res.end(true.toString());
 	});
 
 })
+
 app.post('/API/tokenSignIn', (req, res) => {
 	// console.log(req.headers.cookie.substring(req.headers.cookie.indexOf('connect.sid=s%3A') + 16, req.headers.cookie.lastIndexOf('.')));
 	google.verifyID(req.body.idToken, function (userInfo) {
@@ -161,7 +109,7 @@ app.post('/API/tokenSignIn', (req, res) => {
 	});
 })
 app.post('/API/setOrderState', (req, res) => {
-	sql.getUserByOrderID(req.body.orderID, function (user) {
+	/*sql.getUserByOrderID(req.body.orderID, function (user) {
 		console.log(user);
 		var mailOptions = {
 			from: 'thuthuka.khumalo@student.stbenedicts.co.za',
@@ -177,7 +125,7 @@ app.post('/API/setOrderState', (req, res) => {
 				console.log('Email sent: ' + info.response);
 			}
 		});
-	});
+	});*/
 
 	if (req.body.state === 'Waiting') {
 		//send order confirmation email
@@ -191,3 +139,81 @@ app.post('/API/setOrderState', (req, res) => {
 app.listen(2021, () => {
 	console.log('listening for port 2021');
 });
+
+formatOrders = function(orders) {
+	orders.push({// eliminates edge cases
+		category: 'FFFF',
+		filling: 'FFFF',
+		name: 'FFFF',
+		optionName: 'FFFF',
+		orderID: -1,
+		state: 'FFFF'
+	});
+
+	let orderTemp = {
+		orderID: -1,
+		category: '',
+		filling: [],
+		name: '',
+		option: '',
+		state: ''
+	};
+	let ordersTemp = [];
+	let same = false;
+
+	for (let i = 0; i < orders.length - 1; i++) {// formates the sequel result into data that can be usefull
+		orderTemp.orderID = orders[i].orderID;
+		orderTemp.category = orders[i].category;
+		if (orders[i].filling != 'None') {
+			orderTemp.filling.push(orders[i].filling);
+		}
+		orderTemp.name = orders[i].name;
+		orderTemp.option = orders[i].optionName;
+		orderTemp.state = orders[i].state;
+
+		if (same && !(orders[i].orderID === orders[i + 1].orderID)) {// true and nextid is not equal
+			// add filling, push, same = false
+			ordersTemp.push(orderTemp);
+			orderTemp = {
+				category: '',
+				filling: [],
+				name: '',
+				option: '',
+				state: ''
+			};
+			same = false;
+		}
+		else if (same && orders[i].orderID === orders[i + 1].orderID) {// same and next id is equal
+			// add filling
+		}
+		else if (!same && !(orders[i].orderID === orders[i + 1].orderID)) {// false and next id is not equal
+			// push, clear template
+			ordersTemp.push(orderTemp);
+			orderTemp = {
+				category: '',
+				filling: [],
+				name: '',
+				option: '',
+				state: ''
+			};
+		}
+		else {// nextID is equal and same = false
+			if (orders[i].category === orders[i + 1].category) {
+				// set same = true, dont push
+				same = true;
+			}
+			else {// categories are different
+				// push, clear template
+				ordersTemp.push(orderTemp);
+				orderTemp = {
+					category: '',
+					filling: [],
+					name: '',
+					option: '',
+					state: ''
+				};
+			}
+		}
+	}
+	return ordersTemp;
+}
