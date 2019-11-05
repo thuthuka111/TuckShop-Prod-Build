@@ -198,7 +198,7 @@ formatOrders = function(orders) {
 			};
 		}
 		else {// nextID is equal and same = false
-			if (orders[i].category === orders[i + 1].category) {
+			if (orders[i].orderFillingID === orders[i + 1].orderFillingID) {
 				// set same = true, dont push
 				same = true;
 			}
