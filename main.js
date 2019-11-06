@@ -140,7 +140,7 @@ app.listen(2021, () => {
 	console.log('listening for port 2021');
 });
 
-formatOrders = function(orders) {
+formatOrders = function (orders) {
 	orders.push({// eliminates edge cases
 		category: 'FFFF',
 		filling: 'FFFF',
@@ -215,5 +215,49 @@ formatOrders = function(orders) {
 			}
 		}
 	}
-	return ordersTemp;
+	ordersTemp.push({// eliminates edge cases
+		category: 'FFFF',
+		filling: 'FFFF',
+		name: 'FFFF',
+		optionName: 'FFFF',
+		orderID: -1,
+		state: 'FFFF'
+	});
+	let ordersTempTemp = [];
+	let orderTempTemp = {
+		name: '',
+		state: '',
+		orders: []
+	}
+	for (let i = 0; i < ordersTemp.length - 1; i++) {
+		orderTempTemp.name = ordersTemp[i].name;
+		orderTempTemp.state = ordersTemp[i].state;
+		if (same) {
+			// console.log('push orders');
+			orderTempTemp.orders.push(ordersTemp[i]);
+			if (!(ordersTemp[i].name === ordersTemp[i + 1].name)) {
+				same = false;
+				// console.log('push all, clear');
+				ordersTempTemp.push(orderTempTemp);
+				orderTempTemp = {
+					name: '',
+					orders: []
+				}
+			}
+		}
+		else if (ordersTemp[i].name === ordersTemp[i + 1].name) {
+			// console.log('set same = true, push orders');
+			same = true;
+			orderTempTemp.orders.push(ordersTemp[i]);
+		}
+		else {
+			// console.log('push all, clear');
+			ordersTempTemp.push(orderTempTemp);
+			orderTempTemp = {
+				name: '',
+				orders: []
+			}
+		}
+	}
+	return ordersTempTemp;
 }

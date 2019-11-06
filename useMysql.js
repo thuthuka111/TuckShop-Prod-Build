@@ -257,20 +257,13 @@ exports.getUserByID = function (sessionID, callback) {
 	});
 }
 exports.getUserPendingOrders = function(name, callback) {
-	sql = 'select distinct orders.orderID, name, optionName, category, filling, state FROM user, categories, fillings, options, orders, ordersLink, orderLinkfillingLink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND user.name = ? AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderLinkfillingLink.orderFillingID AND orderLinkfillingLink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID AND state != \'Completed\' ORDER BY orders.orderID'
+	sql = 'select distinct orders.orderID, name, optionName, category, filling, state, ordersLink.orderFillingID FROM user, categories, fillings, options, orders, ordersLink, orderLinkfillingLink, orderStates, orderStatesLink WHERE orders.userID = user.userID AND user.name = ? AND orders.orderID = ordersLink.orderID AND ordersLink.categoryID = categories.categoryID AND ordersLink.optionID = options.optionID AND ordersLink.orderFillingID = orderLinkfillingLink.orderFillingID AND orderLinkfillingLink.fillingID = fillings.fillingID AND orders.orderID = orderStatesLink.orderID AND orderStatesLink.stateID = orderStates.stateID AND state != \'Completed\' ORDER BY orders.orderID'
 	inserts = [name];
 	con.query(sql, inserts, function (err, orders) {
 		if (err) throw err;
 		callback(orders);
 	});
 }
-
-
-
-
-
-
-
 
 exports.sessionExists = function (sessionID, callback) {
 	var sql = 'SELECT sessionID FROM user WHERE sessionID = ?';
@@ -280,38 +273,7 @@ exports.sessionExists = function (sessionID, callback) {
 		callback(result);
 	});
 }
-exports.clearTable = function (tableName) {
-	var sql = 'TRUNCATE TABLE ?';
-	var inserts = [tableName];
-	con.query(sql, inserts);
-	console.log(`${tableName} deleted`);
-}
 
-
-exports.print = function (tableName) {
-	var sql = 'SELECT * FROM ?';
-	var inserts = [tableName];
-	con.query(sql, inserts, function (err, results, fields) {
-		if (err) throw err;
-		console.log(results);
-	});
-}
-exports.dropTable = function (tableName) {
-	var sql = 'DROP TABLE ?';
-	var inserts = [tableName];
-	con.query(sql, inserts, function (err, results, fields) {
-		if (err) throw err;
-		console.log(results);
-	});
-}
-exports.getUserName = function (sessionID) {
-	var sql = `SELECT username FROM user WHERE sessionID = ?`;
-	var inserts = [sessionID];
-	con.query(sql, inserts, function (err, results, fields) {
-		if (err) throw err;
-		console.log(results);
-	});
-}
 exports.userExists = function (sessionID, callback) {
 	var sql = 'SELECT * FROM user WHERE sessionID= ?';
 	var inserts = [sessionID];
